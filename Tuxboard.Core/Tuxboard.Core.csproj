@@ -2,19 +2,31 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>ASP.NET Core 3.1 library for Tuxboard, an open-source dashboard library.</Description>
     <PackageId>Tuxboard.Core</PackageId>
     <Authors>Jonathan "JD" Danylko</Authors>
     <Product>Tuxboard</Product>
     <Copyright>2019-2020</Copyright>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <PackageProjectUrl>https://github.com/jdanylko/Tuxboard</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jdanylko/Tuxboard</RepositoryUrl>
+    <RepositoryType>C#</RepositoryType>
+    <PackageTags>CSharp C#</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +34,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Merger.tt</DependentUpon>
-    </None>
-    <None Update="Data\Merger.tt">
-      <LastGenOutput>Merger.sql</LastGenOutput>
-      <Generator>TextTemplatingFileGenerator</Generator>
     </None>
   </ItemGroup>
 

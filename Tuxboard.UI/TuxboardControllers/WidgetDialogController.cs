@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,8 @@ namespace Tuxboard.UI.TuxboardControllers
             _service = service;
         }
 
+        #region View Component
+
         [HttpGet]
         [Route("/WidgetDialog/")]
         public async Task<IActionResult> Widget()
@@ -32,32 +35,29 @@ namespace Tuxboard.UI.TuxboardControllers
             return PartialView("WidgetDialog", viewModel);
         }
 
+        #endregion
+
+        #region API
+
         [HttpPost]
         [Route("/WidgetDialog/AddWidget/")]
         public async Task<IActionResult> AddWidget([FromBody] AddWidgetParameter model)
         {
-            var result = new TuxResponse { Success = true };
-
             var success = await _service.AddWidgetToTabAsync(model.TabId, model.WidgetId);
+            if (!success)
+            {
+                return StatusCode((int)HttpStatusCode.ExpectationFailed,
+                    $"Widget (id:{model.WidgetId}) NOT saved.");
 
-            result.Message = new TuxViewMessage(
-                success ? "Widget added." : "Widget was NOT added.",
-                success ? TuxMessageType.Success : TuxMessageType.Danger);
+            }
 
-            return Json(result);
+            return Ok();
         }
 
+        #endregion
+        
         private async Task<WidgetDialogViewModel> GetWidgetDialogViewModelAsync()
         {
-            var result = new WidgetDialogViewModel
-            {
-                Groups = null,
-                Widgets = null
-            };
-
-            // var user = await GetCurrentUserAsync();
-
-            // Parameter could be a planId or modified to pull widgets by roleId instead.
             var widgets = await _service.GetWidgetsForAsync();
 
             widgets.ForEach(widget =>
@@ -67,8 +67,11 @@ namespace Tuxboard.UI.TuxboardControllers
                     : widget.GroupName;
             });
 
-            result.Groups = widgets.Select(y => y.GroupName).Distinct().ToList();
-            result.Widgets = new List<Widget>(widgets);
+            var result = new WidgetDialogViewModel
+            {
+                Groups = widgets.Select(y => y.GroupName).Distinct().ToList(),
+                Widgets = new List<Widget>(widgets)
+            };
 
             return result;
         }
